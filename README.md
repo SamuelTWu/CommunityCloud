@@ -9,10 +9,19 @@ Community Cloud is composed of 3 parts:
 The purpose of the Community Cloud is to facilitate the needs of these three groups:
 
 Community Partners
+
+_____________________________
+
 Campus partners are able to advertise directly with chosen student groups who are dedicated to their unique service. In this way, the quality of the volunteering improves while also increase the quantity of volunteers as well. 
 
 Student Orgs
+
+_____________________________
+
 The Community Cloud provides SOs with a personalized calendar which contains dates, times, locations, descriptions, and sign-ups for select service oppurtunities. Students going through the CSC also have the benefit of skipping the process of signing forms and getting approval. Those processes are handled by the CSC. 
 
 Community Service Center
+
+_____________________________
+
 The CSC now has a central database of CPs, which will faciliate in their own community service initiative, including First-Year Student Outreach Project (FYSOP), Alternative Service Breaks (ASB), and CSC projects such as After Schools and W.I.Z.A.R.D.S. These projects will also be advertised to students using the Community Cloud. 
