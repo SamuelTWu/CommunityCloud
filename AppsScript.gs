@@ -85,7 +85,58 @@ function onEdit() {
     addDataValidation(groups);
   }
 }
-   
+  
+function addRecurring(i, indStartDate_recurring, indEndDate_recurring, indStartTime_recurring, indEndTime_recurring, indWeekDays_recurring, title, location, finalDescription, serviceSheet, indEventConfirm, calID)
+{
+  //Logger.log(title+" is a recurring event"); 
+  var startDate = serviceSheet.getRange(i,indStartDate_recurring).getValue();
+  var endDate = serviceSheet.getRange(i,indEndDate_recurring).getValue();
+  var startTime = serviceSheet.getRange(i,indStartTime_recurring).getValue();
+  var endTime = serviceSheet.getRange(i,indEndTime_recurring).getValue();
+  var weekDays = serviceSheet.getRange(i,indWeekDays_recurring).getValue();
+            
+  var formattedStart = Utilities.formatDate(new Date(startDate), 'America/New_York', 'MMMM dd, yyyy');
+  var formattedEnd = Utilities.formatDate(new Date(endDate), 'America/New_York', 'MMMM dd, yyyy');
+  var formattedSTime = Utilities.formatDate(new Date(startTime), SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone(), "HH:mm:ss")
+  var formattedETime = Utilities.formatDate(new Date(endTime), SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone(), "HH:mm:ss")
+
+  var startDateandTime = (formattedStart+" "+formattedSTime);
+  var endDateandTime = (formattedStart+" "+formattedETime);
+
+  var days = weekDays.split(', ').map(function(i) { return CalendarApp.Weekday[i]; });
+
+  var eventSeries = CalendarApp.getCalendarById(calID).createEventSeries(
+    title,
+    new Date(startDateandTime),
+    new Date(endDateandTime),
+    CalendarApp.newRecurrence().addWeeklyRule()
+      .onlyOnWeekdays(days)
+      .until(new Date(formattedEnd)),
+      {location: location, description: finalDescription});
+  //var setEventConfirm = sheet.getRange(i,indEventConfirm).setValue('Event Series ID: ' + eventSeries.getId());
+}
+
+function addSingle(i, serviceSheet, indStartDate_single, indStartTime_single, indEndTime_single, title, location, finalDescription, indEventStatus, calID)
+{
+  Logger.log(title+" is a single event"); 
+  var startDate = serviceSheet.getRange(i,indStartDate_single).getValue();
+  var startTime = serviceSheet.getRange(i,indStartTime_single).getValue();
+  var endTime = serviceSheet.getRange(i,indEndTime_single).getValue();
+            
+  var formattedStart = Utilities.formatDate(new Date(startDate), 'America/New_York', 'MMMM dd, yyyy');
+  var formattedSTime = Utilities.formatDate(new Date(startTime), SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone(), "HH:mm:ss")
+  var formattedETime = Utilities.formatDate(new Date(endTime), SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone(), "HH:mm:ss")
+
+  var startDateandTime = (formattedStart+" "+formattedSTime);
+  var endDateandTime = (formattedStart+" "+formattedETime);
+  var eventSeries = CalendarApp.getCalendarById(calID).createEvent(
+    title,
+    new Date(startDateandTime),
+    new Date(endDateandTime),
+    {location: location, description: finalDescription});
+  //Logger.log('Event Series ID: ' + eventSeries.getId());
+  //var setEventStatus = sheet.getRange(i,indEventConfirm).setValue('Event Series ID: ' + eventSeries.getId());
+}
 
 function fillCalendar() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -100,7 +151,7 @@ function fillCalendar() {
   var Avals_student = studentSheet.getRange("A2:A").getValues();
   var lastRow_student = Avals_student.filter(String).length;
   
-
+  //These are static variables for the google sheets index
   startRow = 9;
   indApprov = 1;
   indTitle = 4;
@@ -149,65 +200,14 @@ function fillCalendar() {
       
       if (approvalStatus == "Approved" && eventConfirm == "")
       {
-          Logger.log(title+" is Approved"); 
           if (isRecurring== "Yes, this is a weekly event")
           {
-              //Logger.log(title+" is a recurring event"); 
-              var startDate = serviceSheet.getRange(i,indStartDate_recurring).getValue();
-              var endDate = serviceSheet.getRange(i,indEndDate_recurring).getValue();
-              var startTime = serviceSheet.getRange(i,indStartTime_recurring).getValue();
-              var endTime = serviceSheet.getRange(i,indEndTime_recurring).getValue();
-              var weekDays = serviceSheet.getRange(i,indWeekDays_recurring).getValue();
-            
-              var formattedStart = Utilities.formatDate(new Date(startDate), 'America/New_York', 'MMMM dd, yyyy');
-              var formattedEnd = Utilities.formatDate(new Date(endDate), 'America/New_York', 'MMMM dd, yyyy');
-              var formattedSTime = Utilities.formatDate(new Date(startTime), SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone(), "HH:mm:ss")
-              var formattedETime = Utilities.formatDate(new Date(endTime), SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone(), "HH:mm:ss")
-
-              var startDateandTime = (formattedStart+" "+formattedSTime);
-              var endDateandTime = (formattedStart+" "+formattedETime);
-
-              
-              
-              var days = weekDays.split(', ').map(function(i) { return CalendarApp.Weekday[i]; });
-
-              var eventSeries = CalendarApp.getCalendarById(calID).createEventSeries(
-                title,
-                new Date(startDateandTime),
-                new Date(endDateandTime),
-                CalendarApp.newRecurrence().addWeeklyRule()
-                    .onlyOnWeekdays(days)
-                    .until(new Date(formattedEnd)),
-                    {location: location, description: finalDescription});
-            
-            //var setEventConfirm = sheet.getRange(i,indEventConfirm).setValue('Event Series ID: ' + eventSeries.getId());
+              addRecurring(i, indStartDate_recurring, indEndDate_recurring, indStartTime_recurring, indEndTime_recurring, indWeekDays_recurring, title, location, finalDescription, serviceSheet, indEventConfirm, calID)
           }
           else if(isRecurring == "No, this is a single event")
           {
-              Logger.log(title+" is a single event"); 
-              var startDate = serviceSheet.getRange(i,indStartDate_single).getValue();
-              var startTime = serviceSheet.getRange(i,indStartTime_single).getValue();
-              var endTime = serviceSheet.getRange(i,indEndTime_single).getValue();
-            
-              var formattedStart = Utilities.formatDate(new Date(startDate), 'America/New_York', 'MMMM dd, yyyy');
-              var formattedSTime = Utilities.formatDate(new Date(startTime), SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone(), "HH:mm:ss")
-              var formattedETime = Utilities.formatDate(new Date(endTime), SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone(), "HH:mm:ss")
-
-              var startDateandTime = (formattedStart+" "+formattedSTime);
-              var endDateandTime = (formattedStart+" "+formattedETime);
-              
-              Logger.log(startDateandTime);
-              Logger.log(endDateandTime);
-
-              var eventSeries = CalendarApp.getCalendarById(calID).createEvent(
-                title,
-                new Date(startDateandTime),
-                new Date(endDateandTime),
-                {location: location, description: finalDescription});
-            //Logger.log('Event Series ID: ' + eventSeries.getId());
-            //var setEventStatus = sheet.getRange(i,indEventStatus).setValue('Event Series ID: ' + eventSeries.getId());
+              addSingle(i, serviceSheet, indStartDate_single, indStartTime_single, indEndTime_single, title, location, finalDescription, indEventConfirm, calID)
           }
-
           //update "Service Partners" library
           servicePartnerLibrary+=serviceID+"\n";
       }
