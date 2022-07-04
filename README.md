@@ -22,3 +22,6 @@ _____________________________
 Community Service Center
 
 The CSC now has a central database of CPs, which will faciliate in their own community service initiative, including First-Year Student Outreach Project (FYSOP), Alternative Service Breaks (ASB), and CSC projects such as After Schools and W.I.Z.A.R.D.S. These projects will also be advertised to students using the Community Cloud. 
+
+
+For a visual overview of the Community Cloud Architecture, check out the "Community Cloud Simple".
