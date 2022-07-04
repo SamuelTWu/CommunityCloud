@@ -1,4 +1,4 @@
-# CommunityServiceCloud
+# Community Cloud
 This project aims to organize and explain the Community Cloud system developed my Boston University's Community Service Center. Programs managers include Sam Wu and Farah Alam
 
 Community Cloud is composed of 3 parts:
